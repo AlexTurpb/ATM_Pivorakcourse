@@ -16,22 +16,27 @@ class Authorize
     check_auth!
   end
 
+  #just some simple 'console output animation'
   def visual_dot str
     print str; 7.times { print "."; sleep 0.2 }; puts
   end
 
   private
 
+  #accepts user pin input, invoked Authorize.new initialize
   def input_pin
     print 'Please Enter Your Account Number: '
     pin = gets.to_i
   end
 
+  #accepts user password input, invoked Authorize.new initialize
   def input_password
     print 'Enter Your Password: '
     password = gets.chomp
   end
 
+  #cheks user input with values in config.yml, writes user data to Authotize instance if true, raises error on false
+  #further errors are implemented with puts operator, as it makes console output more nicer IMHO 
   def check_auth! 
     if ACCOUNTS.has_key?(pin) && password == ACCOUNTS[pin]['password']
       @user_data = { :name => ACCOUNTS[pin]['name'], :balance => ACCOUNTS[pin]['balance'] }
@@ -60,6 +65,7 @@ class Atm
     validate_atm!
   end
 
+  #contains menu options
   def menu
     [
       "Please Choose From the Following Options:",
@@ -70,6 +76,7 @@ class Atm
     ]
   end  
 
+  #accepts user input and provides 'menu-linked' metods execution
   def choise
     loop do
       choise = gets.to_i
@@ -88,6 +95,7 @@ class Atm
   
   private
 
+  #creates Authorize instance and collects user_data for Atm instance initialization, then greets user and displays menu
   def validate_atm!
     Authorize.new.user_data.each { |k,v| instance_variable_set("@#{k}", v) }
     @valid = true
@@ -96,21 +104,31 @@ class Atm
     choise
   end
 
+  ########################## MENU METHODS ##########################
+
+  #(menu-1) shows users balance
   def display_balance
     puts "Your Current Balance is ₴#{@balance}"
     choise
   end
 
-  def notes_sum hsh
-    hsh.inject(0) { |sum, (note, qty)| sum += note * qty } 
-  end
-
+  #(menu-2) accepts amount input, starts withdraw related check methods 
   def withdraw 
     print 'Enter Amount You Wish to Withdraw: '
     amount = gets.to_i
     check_withdraw(amount)
-  end  
+  end
 
+  #(menu-3) ends current user work with ATM and allows to start new one after
+  def logout
+    puts "Logged out"
+    atm = Atm.new
+  end
+
+  ########################## MENU METHODS ##########################
+
+
+  #amount check scenarios, conslole error output 
   def check_withdraw amount
     
     if amount > MAX_WITHDRAW
@@ -128,6 +146,7 @@ class Atm
 
   end
 
+  #calculates notes to compose amount from ATM stash, updates user balance, ATM stash
   def return_cash amount, user_transaction
     stash.each do |note, qty|
       
@@ -154,13 +173,12 @@ class Atm
 
   end
 
-  def logout
-    puts "Logged out"
-    atm = Atm.new
+  #help method provides sum of all notes contained in note related hashes
+  def notes_sum hsh
+    hsh.inject(0) { |sum, (note, qty)| sum += note * qty } 
   end
 
 end
-
 
 class InvalidLoginInput < StandardError; end
 
