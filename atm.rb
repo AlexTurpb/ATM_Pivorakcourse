@@ -16,6 +16,10 @@ class Authorize
     check_auth!
   end
 
+  def visual_dot str
+    print str; 7.times { print "."; sleep 0.2 }; puts
+  end
+
   private
 
   def input_pin
@@ -31,8 +35,7 @@ class Authorize
   def check_auth! 
     if ACCOUNTS.has_key?(pin) && password == ACCOUNTS[pin]['password']
       @user_data = { :name => ACCOUNTS[pin]['name'], :balance => ACCOUNTS[pin]['balance'] }
-      puts 'Cheking info....'
-      sleep 0.3
+      visual_dot('Cheking info')
     else
      raise InvalidLoginInput, 'invalid login or password'
     end
@@ -159,11 +162,6 @@ class Atm
 end
 
 
-
-
 class InvalidLoginInput < StandardError; end
-
-
-
 
 atm = Atm.new
