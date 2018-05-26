@@ -121,7 +121,7 @@ class Atm
 
   #(menu-3) ends current user work with ATM and allows to start new one after
   def logout
-    puts "Logged out"
+    puts "#{name}, Thank You For Using Our ATM. Good-Bye!"
     atm = Atm.new
   end
 
@@ -132,13 +132,13 @@ class Atm
   def check_withdraw amount
     
     if amount > MAX_WITHDRAW
-      puts "ERROR: INSUFFICIENT FUNDS!! PLEASE ENTER A DIFFERENT AMOUNT:"
+      puts "ERROR: INSUFFICIENT FUNDS!! PLEASE ENTER A DIFFERENT AMOUNT!"
       withdraw
     elsif amount > balance
-      puts "ERROR: #{name.capitalize} YOUR BALANCE IS TOO LOW! PLEASE ENTER A DIFFERENT AMOUNT:"    
+      puts "ERROR: #{name.upcase} YOUR BALANCE IS TOO LOW! PLEASE ENTER A DIFFERENT AMOUNT!"    
       withdraw
     elsif amount > notes_sum(stash)
-      puts "ERROR: THE MAXIMUM AMOUNT AVAILABLE IN THIS ATM IS ₴#{notes_sum(stash)}"
+      puts "ERROR: THE MAXIMUM AMOUNT AVAILABLE IN THIS ATM IS ₴#{notes_sum(stash)}!"
       withdraw
     else
       return_cash(amount, user_transaction)  
@@ -161,13 +161,13 @@ class Atm
     end
 
       if amount != 0
-        puts "ERROR: THE AMOUNT YOU REQUESTED CANNOT BE COMPOSED FROM BILLS AVAILABLE IN THIS ATM. PLEASE ENTER A DIFFERENT AMOUNT: "
+        puts "ERROR: THE AMOUNT YOU REQUESTED CANNOT BE COMPOSED FROM BILLS AVAILABLE IN THIS ATM. PLEASE ENTER A DIFFERENT AMOUNT!"
         withdraw
       else
         @balance -= notes_sum(user_transaction)  
         @stash.merge!(user_transaction) {|note, stash_qty, withdrawn| stash_qty - withdrawn }
         
-        puts "#{name} please take your money! Balance is: #{balance} "
+        puts "#{name} please take your money! Your New Balance is: ₴#{balance}"
         choise
       end  
 
